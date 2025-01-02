@@ -36,7 +36,7 @@ export class TestConverter {
         const relativePath = path.relative(config.cypressTestsPath, testFile);
         const playwrightPath = path.join(
           config.playwrightTestsPath,
-          relativePath.replace(/\.spec\.(js|ts)$/, '.spec.ts')
+          relativePath.replace(/\.cy\.ts$/, '.spec.ts')
         );
 
         await this.fileHandler.writeTestFile(playwrightPath, gptResponse.content);

@@ -45,15 +45,31 @@ export class GPTClient {
 
   private createConversionPrompt(cypressTest: string): string {
     return `
-Please convert this Cypress test to Playwright:
+Please convert this Cypress test to Playwright according to the rules:
 
 ${cypressTest}
 
-Please ensure:
+**Rules:**
 1. All Cypress-specific commands are converted to Playwright equivalents
 2. Maintain the same test coverage and assertions
 3. Use Playwright's best practices
-4. Return only the converted code without explanations
+4. Return only the converted code without explanations, especially without \`\`\`javascript at the begining and \`\`\` at the end
+5. Fixtures section contains the list of available fixtures. You can use them in your test.
+6. Base URLs are already configured and you don't need to care about them, so 'cy.visit(path)' you MUST simply convert to 'page.goto(path)'.
+
+**Fixtures:**
+export const test = base.extend<TestOptions>({
+    pageRTL: async ({ page }, use) => {
+        await page.addInitScript(() => {
+            const currentUrl = new URL(window.location.href);
+            if (!currentUrl.searchParams.has('rtl')) {
+                currentUrl.searchParams.append('rtl', 'true');
+                window.location.href = currentUrl.toString();
+            }
+        });
+        await use(page);
+    },
+};
 `;
   }
 }

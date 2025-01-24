@@ -2,6 +2,8 @@
 
 An intelligent agent for automatically converting Cypress tests to Playwright tests using AI, with built-in stability checking and fixing.
 
+![Basic functionallity](showcase.gif)
+
 ## ✨ Features
 
 - 🤖 Uses OpenAI's GPT to convert tests

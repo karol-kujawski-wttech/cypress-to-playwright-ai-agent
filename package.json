@@ -13,6 +13,7 @@
     "dotenv": "^16.4.7",
     "openai": "^4.77.0",
     "typescript": "^5.7.2",
-    "tsx": "^3.12.7"
+    "tsx": "^3.12.7",
+    "@playwright/test": "^1.42.1"
   }
 }

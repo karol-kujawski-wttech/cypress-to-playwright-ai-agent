@@ -7,6 +7,7 @@ export interface ConfigData {
   paths: {
     cypressTests: string;
     playwrightTests: string;
+    playwrightProjectDir: string;
   };
 }
 
@@ -34,9 +35,9 @@ export class Config {
 
   private validateConfig(): void {
     const requiredEnvVars = {
-      'OPENAI_API_KEY': process.env.OPENAI_API_KEY,
       'CYPRESS_TESTS_PATH': process.env.CYPRESS_TESTS_PATH,
       'PLAYWRIGHT_TESTS_PATH': process.env.PLAYWRIGHT_TESTS_PATH,
+      'PLAYWRIGHT_PROJECT_DIR': process.env.PLAYWRIGHT_PROJECT_DIR,
     };
 
     const missingVars = Object.entries(requiredEnvVars)
@@ -64,15 +65,12 @@ export class Config {
         paths: {
           cypressTests: process.env.CYPRESS_TESTS_PATH!,
           playwrightTests: process.env.PLAYWRIGHT_TESTS_PATH!,
+          playwrightProjectDir: process.env.PLAYWRIGHT_PROJECT_DIR!,
         },
       };
     }
     
     return this.configData;
-  }
-
-  get openAIKey(): string {
-    return this.getData().openai.apiKey;
   }
 
   get cypressTestsPath(): string {
@@ -81,5 +79,9 @@ export class Config {
 
   get playwrightTestsPath(): string {
     return this.getData().paths.playwrightTests;
+  }
+
+  get playwrightProjectDir(): string {
+    return this.getData().paths.playwrightProjectDir;
   }
 } 

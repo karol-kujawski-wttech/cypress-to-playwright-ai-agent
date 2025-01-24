@@ -34,4 +34,6 @@ coverage/
 # Optional eslint cache
 .eslintcache
 
-.workdir/
+#Test results
+playwright-report
+test-results

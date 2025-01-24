@@ -13,6 +13,7 @@ export class GPTClient {
 
   async convertTest(cypressTest: string): Promise<GPTResponse> {
     try {
+      console.log('\n🤖 Sending request to OpenAI...');
       const prompt = this.createConversionPrompt(cypressTest);
       
       const response = await this.openai.chat.completions.create({
@@ -30,11 +31,15 @@ export class GPTClient {
         max_tokens: this.configData.openai.maxTokens,
       });
 
+      console.log('✅ Received response from OpenAI');
+      console.log('📝 Converting test...\n');
+
       return {
         content: response.choices[0].message.content || '',
         success: true,
       };
     } catch (error) {
+      console.error('❌ Error communicating with OpenAI:', error);
       return {
         content: '',
         success: false,
@@ -54,22 +59,9 @@ ${cypressTest}
 2. Maintain the same test coverage and assertions
 3. Use Playwright's best practices
 4. Return only the converted code without explanations, especially without \`\`\`javascript at the begining and \`\`\` at the end
-5. Fixtures section contains the list of available fixtures. You can use them in your test.
 6. Base URLs are already configured and you don't need to care about them, so 'cy.visit(path)' you MUST simply convert to 'page.goto(path)'.
+7. Ignore commands related to percy as mainBodySnapshot.
 
-**Fixtures:**
-export const test = base.extend<TestOptions>({
-    pageRTL: async ({ page }, use) => {
-        await page.addInitScript(() => {
-            const currentUrl = new URL(window.location.href);
-            if (!currentUrl.searchParams.has('rtl')) {
-                currentUrl.searchParams.append('rtl', 'true');
-                window.location.href = currentUrl.toString();
-            }
-        });
-        await use(page);
-    },
-};
 `;
   }
 }

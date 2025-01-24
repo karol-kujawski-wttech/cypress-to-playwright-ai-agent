@@ -1,6 +1,6 @@
 # 🎭 Cypress to Playwright Test Converter
 
-An intelligent agent for automatically converting Cypress tests to Playwright tests using AI, with built-in stability checking.
+An intelligent agent for automatically converting Cypress tests to Playwright tests using AI, with built-in stability checking and fixing.
 
 ## ✨ Features
 
@@ -12,6 +12,7 @@ An intelligent agent for automatically converting Cypress tests to Playwright te
 - 📝 Detailed conversion logging
 
 ## 📁 Project Structure 
+```
 .workdir/
 ├── cypress     / # Source Cypress tests
 ├── playwright  / # Playwright project
@@ -19,7 +20,7 @@ An intelligent agent for automatically converting Cypress tests to Playwright te
 │ │ ├── stable  / # Stable tests
 │ │ └── flaky   / # Flaky tests
 src             / # Agent implementation    
-
+```
 
 ## 🔄 Conversion Process
 
@@ -30,13 +31,3 @@ src             / # Agent implementation
    - If all runs pass → Stable folder
    - If any run fails → Flaky folder
 5. **Fixing flaky tests**: Uses GPT to fix instability or any other error - to be implemented
-
-## 🛠️ Configuration
-
-The converter uses environment variables for configuration:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `CYPRESS_TESTS_PATH` | Path to Cypress tests | `./.workdir/cypress` |
-| `PLAYWRIGHT_TESTS_PATH` | Path for converted tests | `./.workdir/playwright/tests/` |
-| `PLAYWRIGHT_PROJECT_DIR` | Playwright project directory | `./.workdir/playwright/` 

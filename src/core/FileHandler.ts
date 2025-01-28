@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { ConversionResult } from '../types';
 
 export class FileHandler {
   async readTestFile(filePath: string): Promise<string> {
@@ -21,24 +22,21 @@ export class FileHandler {
   }
 
   async findCypressTests(directory: string): Promise<string[]> {
-    const files: string[] = [];
-    
-    async function scan(dir: string) {
+    async function scanDirectory(dir: string): Promise<string[]> {
       const entries = await fs.readdir(dir, { withFileTypes: true });
-      
-      for (const entry of entries) {
+      const results = await Promise.all(entries.map(async entry => {
         const fullPath = path.join(dir, entry.name);
         
         if (entry.isDirectory()) {
-          await scan(fullPath);
-        } else if (entry.isFile() && /\.cy\.ts$/.test(entry.name)) {
-          files.push(fullPath);
+          return scanDirectory(fullPath);
         }
-      }
+        return entry.isFile() && /\.cy\.ts$/.test(entry.name) ? [fullPath] : [];
+      }));
+      
+      return results.flat();
     }
 
-    await scan(directory);
-    return files;
+    return scanDirectory(directory);
   }
 
   async deleteFile(filePath: string): Promise<void> {

@@ -28,12 +28,15 @@ export class PlaywrightRunner {
           'npm run test', 
           { 
             cwd: this.config.playwrightProjectDir,
+            env: {
+              ...process.env,
+              PW_TEST_HTML_REPORT_OPEN: 'never'
+            }
           }
         );
         
         console.log('📋 Test execution output:', stdout);
         
-        // Check if tests passed by looking for the "passed" message in stdout
         const testsPassedPattern = /\d+ passed/;
         const testsFailedPattern = /\d+ failed/;
         
@@ -46,7 +49,6 @@ export class PlaywrightRunner {
             error: stderr || 'Tests failed without error message'
           });
         } else {
-          // Tests passed, even if there are warnings in stderr
           console.log('✅ Test passed');
           results.push({
             success: true

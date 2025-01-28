@@ -59,9 +59,67 @@ ${cypressTest}
 2. Maintain the same test coverage and assertions
 3. Use Playwright's best practices
 4. Return only the converted code without explanations, especially without \`\`\`javascript at the begining and \`\`\` at the end
-6. Base URLs are already configured and you don't need to care about them, so 'cy.visit(path)' you MUST simply convert to 'page.goto(path)'.
-7. Ignore commands related to percy as mainBodySnapshot.
 
+`;
+  }
+
+  async fixTest(testContent: string, errorDetails: { message: string, location: { line: number, column: number } }): Promise<GPTResponse> {
+    try {
+      console.log('\n🔧 Sending test fix request to OpenAI...');
+      const prompt = this.createFixPrompt(testContent, errorDetails);
+      
+      const response = await this.openai.chat.completions.create({
+        model: this.configData.openai.model,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert test automation engineer. Fix the Playwright test based on the error message and location.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        max_tokens: this.configData.openai.maxTokens,
+      });
+
+      console.log('✅ Received fix suggestion from OpenAI');
+      console.log('📝 Applying fix...\n');
+
+      return {
+        content: response.choices[0].message.content || '',
+        success: true,
+      };
+    } catch (error) {
+      console.error('❌ Error getting fix from OpenAI:', error);
+      return {
+        content: '',
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error occurred',
+      };
+    }
+  }
+
+  private createFixPrompt(testContent: string, errorDetails: { message: string, location: { line: number, column: number } }): string {
+    return `
+Please fix this Playwright test that is failing. Here are the details:
+
+**Test Content:**
+${testContent}
+
+**Error Message:**
+${errorDetails.message}
+
+**Error Location:**
+Line: ${errorDetails.line}
+Column: ${errorDetails.column}
+
+**Rules:**
+1. Return only the fixed test code
+2. Keep the test structure and assertions similar
+3. Fix only what's necessary to make the test pass
+4. Return the complete test file content
+5. Do not include any explanations or markdown code blocks
 `;
   }
 }

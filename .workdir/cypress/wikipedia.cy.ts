@@ -1,5 +1,4 @@
 import { describe, it } from "node:test";
-const cy;
 
 describe('Wikipedia Tests', () => {
     it('should have the correct page title', () => {

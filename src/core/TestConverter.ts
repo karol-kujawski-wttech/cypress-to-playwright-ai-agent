@@ -16,9 +16,6 @@ export class TestConverter {
   }
 
   async convertTests(config: ConversionConfig): Promise<ConversionResult[]> {
-    // Initialize Playwright project structure
-    await this.fileHandler.setupPlaywrightProject();
-
     const results: ConversionResult[] = [];
     const cypressTests = await this.fileHandler.findCypressTests(config.cypressTestsPath);
     console.log('🔍 Found Cypress tests:', cypressTests);

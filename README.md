@@ -32,4 +32,4 @@ src             / # Agent implementation
 4. **Classification**: 
    - If all runs pass → Stable folder
    - If any run fails → Flaky folder
-5. **Fixing flaky tests**: Uses GPT to fix instability or any other error - to be implemented
+5. **Fixing flaky tests**: Uses GPT to fix instability or any other error
